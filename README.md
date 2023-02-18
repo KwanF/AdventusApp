@@ -3,12 +3,12 @@
 ## Travel Destination Application
 
 This application will allow users to:
-- As a user, I want to add a city to one of two types of collection
-  - There are two types of collection: cities visited, cities I want to visit
+- As a user, I want to add a city that I have visited
 - As a user, I want to view the cities in my collection
 - As a user, I want to rate the cities in my collection on a scale of one to five stars
 - As a user, I want to write a short note about the cities in my collection
-- As a user, I want to group the cities by their continent
+- As a user, I want to view the cities by their continent
+- - As a user, I want to view the cities by their ratings
 
 This project is of interest to me because I often see destinations on Instagram that I want to travel to, and I want to
 have a repository of these locations to refer to when I plan my vacation. While I can save the post that comes up on 
