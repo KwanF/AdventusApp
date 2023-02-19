@@ -1,10 +1,10 @@
-package model.City;
+package model.city;
 
 public class City {
 
-    private String name;
-    private int rating;
-    private Continent continent;
+    private final String name;
+    private final int rating;
+    private final Continent continent;
 
     // REQUIRES: The name of the city has a non-zero length
     // EFFECTS: Creates a city with the given name, rating, and corresponding continent

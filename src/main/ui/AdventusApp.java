@@ -1,15 +1,15 @@
 package ui;
 
 
-import model.City.City;
-import model.City.Continent;
-import model.DestinationList.DestinationList;
+import model.city.City;
+import model.city.Continent;
+import model.destinationlist.DestinationList;
 
 import java.util.Scanner;
 
-// Adventus travel planner application
+// Adventus city travelled tracker
 public class AdventusApp {
-    private DestinationList list1;
+    private DestinationList mainList;
     private Scanner input;
 
     private Continent continent;
@@ -67,7 +67,7 @@ public class AdventusApp {
     // MODIFIES: this
     // EFFECTS: initializes a destination list
     private void init() {
-        list1 = new DestinationList();
+        mainList = new DestinationList();
         input = new Scanner(System.in);
         input.useDelimiter("\n");
     }
@@ -82,7 +82,7 @@ public class AdventusApp {
 
     // EFFECTS: Adds a city to the list
     private void doAddCity() {
-        System.out.println("Enter the name of the city you want to visit:");
+        System.out.println("Enter the name of the city you have visited:");
         input.nextLine();
         name = input.nextLine();
 
@@ -96,8 +96,8 @@ public class AdventusApp {
         continent = convertContinentNum(continentNum);
 
         newCity = new City(name, rating, continent);
-        list1.addCity(newCity);
-        list1.printAllDestinationList();
+        mainList.addCity(newCity);
+        mainList.printAllDestinationList();
     }
 
     // REQUIRES: An integer
@@ -129,15 +129,15 @@ public class AdventusApp {
         if (criteria.equals("ratings")) {
             displayRatingsMenu();
             ratingRequested = input.nextInt();
-            list1.printDestinationListByRatings(ratingRequested);
+            mainList.printDestinationListByRatings(ratingRequested);
 
         } else if (criteria.equals("continent")) {
             displayContinentMenu();
             continentRequested = input.nextInt();
             continent = convertContinentNum(continentRequested);
-            list1.printDestinationListByContinent(continentRequested);
+            mainList.printDestinationListByContinent(continentRequested);
         } else {
-            list1.printAllDestinationList();
+            mainList.printAllDestinationList();
         }
 
     }
