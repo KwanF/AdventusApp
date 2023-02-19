@@ -3,6 +3,7 @@
 ## Travel Destination Application
 
 This application will allow users to:
+
 - As a user, I want to add a city that I have visited
 - As a user, I want to view the cities in my collection
 - As a user, I want to rate the cities in my collection on a scale of one to five stars

@@ -5,6 +5,7 @@ import model.city.City;
 import model.city.Continent;
 import model.destinationlist.DestinationList;
 
+import java.util.List;
 import java.util.Scanner;
 
 // Adventus city travelled tracker
@@ -129,15 +130,25 @@ public class AdventusApp {
         if (criteria.equals("ratings")) {
             displayRatingsMenu();
             ratingRequested = input.nextInt();
-            mainList.printDestinationListByRatings(ratingRequested);
+            List<City> citiesByRating = mainList.getCitiesByRating(ratingRequested);
+
+            for (City c : citiesByRating) {
+                System.out.println("'" + c.getName());
+            }
 
         } else if (criteria.equals("continent")) {
             displayContinentMenu();
             continentRequested = input.nextInt();
             continent = convertContinentNum(continentRequested);
-            mainList.printDestinationListByContinent(continentRequested);
+            List<City> citiesByContinent = mainList.getCitiesByContinent(continent);
+
+            for (City c : citiesByContinent) {
+                System.out.println("'" + c.getName());
+            }
         } else {
-            mainList.printAllDestinationList();
+            for (City c : mainList.getAllCities()) {
+                System.out.println("'" + c.getName());
+            }
         }
 
     }

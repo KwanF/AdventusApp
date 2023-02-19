@@ -74,33 +74,33 @@ public class DestinationList {
         }
     }
 
-    // REQUIRES: An integer rating from 1-5
-    // EFFECTS: Prints out the list of cities with the given rating
-    public void printDestinationListByRatings(int rating) {
+//    // REQUIRES: An integer rating from 1-5
+//    // EFFECTS: Prints out the list of cities with the given rating
+//    public void printDestinationListByRatings(int rating) {
+//
+//        System.out.println("Here's your travel destination list filtered by rating: \n");
+//        for (City c : this.cities) {
+//            if (c.getRating() == rating) {
+//                System.out.println("'" + c.getName());
+//            }
+//        }
+//
+//    }
 
-        System.out.println("Here's your travel destination list filtered by rating: \n");
-        for (City c : this.cities) {
-            if (c.getRating() == rating) {
-                System.out.println("'" + c.getName());
-            }
-        }
 
-    }
-
-
-    // REQUIRES: A integer representing a continent
-    // EFFECTS: Prints out the list of cities in the given continent
-    public void printDestinationListByContinent(int continentNum) {
-        Continent continent;
-        continent = convertContinentNum(continentNum);
-
-        System.out.println("Here's your travel destination list filtered by continent: \n");
-        for (City c : this.cities) {
-            if (c.getContinent().equals(continent)) {
-                System.out.println("'" + c.getName());
-            }
-        }
-    }
+//    // REQUIRES: A integer representing a continent
+//    // EFFECTS: Prints out the list of cities in the given continent
+//    public void printDestinationListByContinent(int continentNum) {
+//        Continent continent;
+//        continent = convertContinentNum(continentNum);
+//
+//        System.out.println("Here's your travel destination list filtered by continent: \n");
+//        for (City c : this.cities) {
+//            if (c.getContinent().equals(continent)) {
+//                System.out.println("'" + c.getName());
+//            }
+//        }
+//    }
 
     // REQUIRES: An integer representing a continent
     // EFFECTS: Returns a continent corresponding to the integer
