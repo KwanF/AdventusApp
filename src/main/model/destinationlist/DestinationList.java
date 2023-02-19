@@ -102,9 +102,9 @@ public class DestinationList {
         }
     }
 
-    // REQUIRES: An integer
+    // REQUIRES: An integer representing a continent
     // EFFECTS: Returns a continent corresponding to the integer
-    private Continent convertContinentNum(int continentNum) {
+    public Continent convertContinentNum(int continentNum) {
         if (continentNum == 1) {
             return Continent.AFRICA;
         } else if (continentNum == 2) {

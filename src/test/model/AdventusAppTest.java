@@ -37,12 +37,6 @@ public class AdventusAppTest {
         assertTrue(testCities.contains(Vancouver));
         assertEquals(1, testCities.size());
     }
-    
-//    @Test
-//    void testConvertContinentNum() {
-//        assertEquals(Continent.AFRICA, convertContinentNum(1));
-//        assertEquals(Continent.SOUTH_AMERICA, convertContinentNum(7));
-//    }
 
     @Test
     void testConstructor() {
@@ -50,24 +44,5 @@ public class AdventusAppTest {
         assertEquals(5, Vancouver.getRating());
         assertEquals(Continent.NORTH_AMERICA, Vancouver.getContinent());
     }
-
-//    @Test
-//    void testSelectCriteria() {
-//        String selection;
-//
-//        selection = "a";
-//        assertEquals("all", selectCriteria());
-//
-//        selection = "r";
-//        assertEquals("ratings", selectCriteria());
-//
-//        selection = "c";
-//        assertEquals("continent", selectCriteria());
-//
-//    }
-
-
-
-    
 
 }
