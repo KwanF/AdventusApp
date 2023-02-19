@@ -12,7 +12,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DestinationListTest {
-    private DestinationList testCities;
+    private DestinationList testDestionationList;
     private City Vancouver;
     private City Richmond;
     private City Burnaby;
@@ -20,7 +20,8 @@ public class DestinationListTest {
     private City France;
 
     @BeforeEach
-    void runBefore() {
+    public void runBefore() {
+        testDestionationList = new DestinationList();
         Vancouver = new City("vancouver", 5, Continent.NORTH_AMERICA);
         Richmond = new City("richmond", 3, Continent.NORTH_AMERICA);
         Burnaby = new City("burnaby", 1, Continent.NORTH_AMERICA);
@@ -30,37 +31,40 @@ public class DestinationListTest {
     }
 
     @Test
-    void testAddCity() {
-        List<City> cities = new ArrayList<>();
-        City Vancouver = new City("vancouver", 5, Continent.NORTH_AMERICA);
-        cities.add(Vancouver);
-
-        assertTrue(cities.contains(Vancouver));
-        assertEquals(1, cities.size());
+    public void testDestinationList() {
+        testDestionationList = new DestinationList();
     }
 
     @Test
-    void testViewAllCities() {
-        testCities.addCity(Vancouver);
-        testCities.addCity(Richmond);
-        testCities.addCity(Burnaby);
-        testCities.addCity(London);
-        testCities.addCity(France);
+    public void testAddCity() {
+        City Vancouver = new City("vancouver", 5, Continent.NORTH_AMERICA);
+        testDestionationList.addCity(Vancouver);
 
-        List<City> testAllCities = testCities.getAllCities();
+        assertTrue(testDestionationList.containsCity(Vancouver));
+    }
+
+    @Test
+    public void testGetAllCities() {
+        testDestionationList.addCity(Vancouver);
+        testDestionationList.addCity(Richmond);
+        testDestionationList.addCity(Burnaby);
+        testDestionationList.addCity(London);
+        testDestionationList.addCity(France);
+
+        List<City> testAllCities = testDestionationList.getAllCities();
 
         assertEquals(5, testAllCities.size());
     }
 
     @Test
-    void testViewCitiesByRating() {
-        testCities.addCity(Vancouver);
-        testCities.addCity(Richmond);
-        testCities.addCity(Burnaby);
-        testCities.addCity(London);
-        testCities.addCity(France);
+    public void testGetCitiesByRating() {
+        testDestionationList.addCity(Vancouver);
+        testDestionationList.addCity(Richmond);
+        testDestionationList.addCity(Burnaby);
+        testDestionationList.addCity(London);
+        testDestionationList.addCity(France);
 
-        List<City> testCitiesByRating = testCities.getCitiesByRating(5);
+        List<City> testCitiesByRating = testDestionationList.getCitiesByRating(5);
 
         assertEquals(2, testCitiesByRating.size());
         assertTrue(testCitiesByRating.contains(Vancouver));
@@ -73,14 +77,14 @@ public class DestinationListTest {
 
 
     @Test
-    void testViewCitiesByContinent() {
-        testCities.addCity(Vancouver);
-        testCities.addCity(Richmond);
-        testCities.addCity(Burnaby);
-        testCities.addCity(London);
-        testCities.addCity(France);
+    public void testGetCitiesByContinent() {
+        testDestionationList.addCity(Vancouver);
+        testDestionationList.addCity(Richmond);
+        testDestionationList.addCity(Burnaby);
+        testDestionationList.addCity(London);
+        testDestionationList.addCity(France);
 
-        List<City> testCitiesByRating = testCities.getCitiesByContinent(Continent.EUROPE);
+        List<City> testCitiesByRating = testDestionationList.getCitiesByContinent(Continent.EUROPE);
 
         assertEquals(2, testCitiesByRating.size());
 

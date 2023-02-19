@@ -22,6 +22,13 @@ public class DestinationList {
         this.cities.add(city);
     }
 
+    // REQUIRES: A city
+    // MODIFIES:
+    // EFFECTS: Returns true if the destination list contains the requested city, false otherwise
+    public boolean containsCity(City city) {
+        return (this.cities.contains(city));
+    }
+
     // EFFECTS: Returns the cities that has the given rating
     public List<City> getAllCities() {
         List<City> allCities = new ArrayList<>();
