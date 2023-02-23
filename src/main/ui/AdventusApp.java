@@ -32,6 +32,7 @@ public class AdventusApp {
 
     // MODIFIES: this
     // EFFECTS: processes user input
+    // Code based on the TellerApp provided in the CPSC 210 course
     private void runAdventus() {
         boolean keepGoing = true;
         String command = null;
@@ -55,6 +56,7 @@ public class AdventusApp {
 
     // MODIFIES: this
     // EFFECTS: processes user command
+    // Code based on the TellerApp provided in the CPSC 210 course
     private void processCommand(String command) {
         if (command.equals("a")) {
             doAddCity();
@@ -67,6 +69,7 @@ public class AdventusApp {
 
     // MODIFIES: this
     // EFFECTS: initializes a destination list
+    // Code based on the TellerApp provided in the CPSC 210 course
     private void init() {
         mainList = new DestinationList();
         input = new Scanner(System.in);
@@ -74,6 +77,7 @@ public class AdventusApp {
     }
 
     // EFFECTS: displays menu of options to user
+    // Code based on the TellerApp provided in the CPSC 210 course
     private void displayMenu() {
         System.out.println("\nSelect from:");
         System.out.println("\ta -> Add a city");
@@ -156,6 +160,7 @@ public class AdventusApp {
     }
 
     // EFFECTS: prompts user to filter list based on rating or continent, and returns it
+    // Code based on the TellerApp provided in the CPSC 210 course
     private String selectCriteria() {
         String selection = "";  // force entry into loop
 
