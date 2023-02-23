@@ -36,10 +36,21 @@ public class DestinationListTest {
 
     @Test
     public void testAddCity() {
-        City Vancouver = new City("vancouver", 5, Continent.NORTH_AMERICA);
         testDestinationList.addCity(Vancouver);
 
         assertTrue(testDestinationList.containsCity(Vancouver));
+    }
+
+    @Test
+    public void testRemoveCity() {
+        testDestinationList.addCity(Vancouver);
+        testDestinationList.addCity(Richmond);
+
+        testDestinationList.removeCity(Richmond.getName());
+
+        assertTrue(testDestinationList.containsCity(Vancouver));
+        assertFalse(testDestinationList.containsCity(Richmond));
+
     }
 
     @Test

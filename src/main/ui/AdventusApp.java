@@ -187,9 +187,9 @@ public class AdventusApp {
         String selection = "";  // force entry into loop
 
         while (!(selection.equals("r") || selection.equals("c") || (selection.equals("a")))) {
-            System.out.println("press a to show all items");
-            System.out.println("press r to filter by ratings");
-            System.out.println("press c to filter by continent");
+            System.out.println("press 'a' to show all items");
+            System.out.println("press 'r' to filter by ratings");
+            System.out.println("press 'c' to filter by continent");
             selection = input.next();
             selection = selection.toLowerCase();
         }

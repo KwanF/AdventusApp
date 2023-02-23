@@ -25,14 +25,15 @@ public class DestinationList {
     // REQUIRES: A city
     // MODIFIES: this
     // EFFECTS: Removes the given city from the list
-    public List<City> removeCity(String cityToRemove) {
+    public boolean removeCity(String cityToRemove) {
+        City removeThisCity = null;
 
         for (City c : this.cities) {
             if (c.getName().equals(cityToRemove)) {
-                this.cities.remove(c);
+                removeThisCity = c;
             }
         }
-        return this.cities;
+        return this.cities.remove(removeThisCity);
     }
 
 
