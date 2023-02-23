@@ -23,6 +23,20 @@ public class DestinationList {
     }
 
     // REQUIRES: A city
+    // MODIFIES: this
+    // EFFECTS: Removes the given city from the list
+    public List<City> removeCity(String cityToRemove) {
+
+        for (City c : this.cities) {
+            if (c.getName().equals(cityToRemove)) {
+                this.cities.remove(c);
+            }
+        }
+        return this.cities;
+    }
+
+
+    // REQUIRES: A city
     // MODIFIES:
     // EFFECTS: Returns true if the destination list contains the requested city, false otherwise
     public boolean containsCity(City city) {

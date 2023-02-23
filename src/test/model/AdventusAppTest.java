@@ -39,6 +39,18 @@ public class AdventusAppTest {
     }
 
     @Test
+    void testDoRemoveCity() {
+        testCities.add(Vancouver);
+        testCities.add(Richmond);
+        assertEquals(2, testCities.size());
+
+        testCities.remove(Richmond);
+        assertEquals(1, testCities.size());
+        assertTrue(testCities.contains(Vancouver));
+        assertFalse(testCities.contains(Richmond));
+    }
+
+    @Test
     void testConstructor() {
         assertEquals("vancouver", Vancouver.getName());
         assertEquals(5, Vancouver.getRating());

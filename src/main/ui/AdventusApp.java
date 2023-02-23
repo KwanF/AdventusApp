@@ -15,6 +15,7 @@ public class AdventusApp {
 
     private Continent continent;
     private City newCity;
+    private City removeCity;
 
     private String criteria;
     private String name;
@@ -62,6 +63,8 @@ public class AdventusApp {
             doAddCity();
         } else if (command.equals("v")) {
             viewCities();
+        } else if (command.equals("r")) {
+            doRemoveCity();
         } else {
             System.out.println("Selection not valid...");
         }
@@ -82,9 +85,11 @@ public class AdventusApp {
         System.out.println("\nSelect from:");
         System.out.println("\ta -> Add a city");
         System.out.println("\tv -> View cities saved");
+        System.out.println("\tr -> Remove a saved city");
         System.out.println("\tq -> quit\n");
     }
 
+    // REQUIRES: The city to be added does not exist already in the list
     // EFFECTS: Adds a city to the list
     private void doAddCity() {
         System.out.println("Enter the name of the city you have visited:");
@@ -106,6 +111,23 @@ public class AdventusApp {
             System.out.println("'" + c.getName());
         }
     }
+
+    // REQUIRES: The requested city to be removed needs to have already been added previously
+    // EFFECTS: Removes a city from the list
+    private void doRemoveCity() {
+        System.out.println("\nEnter the name of the city you want to remove:");
+        input.nextLine();
+        name = input.nextLine();
+
+        mainList.removeCity(name);
+        System.out.println("\nRemoved: " + name);
+        System.out.println("\nYour new list:");
+
+        for (City c : mainList.getAllCities()) {
+            System.out.println("'" + c.getName());
+        }
+    }
+
 
     // REQUIRES: An integer
     // EFFECTS: Returns a continent corresponding to the integer
