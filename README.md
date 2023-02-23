@@ -4,13 +4,11 @@
 
 This application will allow users to:
 
-- As a user, I want to add a city that I have visited
-- As a user, I want to view the cities in my collection
-- As a user, I want to rate the cities in my collection on a scale of one to five stars
-- As a user, I want to write a short note about the cities in my collection
+- As a user, I want to add a city that I have visited to my collection
+- As a user, for each city added, I also want to assign a rating from 1-5 star, and as well as its continent
+- As a user, I want to view all the cities in my collection
 - As a user, I want to view the cities by their continent
 - As a user, I want to view the cities by their ratings
-- Test comment
 
 This project is of interest to me because I often see destinations on Instagram that I want to travel to, and I want to
 have a repository of these locations to refer to when I plan my vacation. While I can save the post that comes up on 

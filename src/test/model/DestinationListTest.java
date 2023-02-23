@@ -106,36 +106,5 @@ public class DestinationListTest {
         assertEquals(Continent.SOUTH_AMERICA, testDestinationList.convertContinentNum(7));
     }
 
-//    @Test
-//    void testPrintAllDestinationList() {
-//        testDestinationList.addCity(Vancouver);
-//        testDestinationList.addCity(Richmond);
-//        testDestinationList.addCity(Burnaby);
-//        testDestinationList.addCity(London);
-//        testDestinationList.addCity(France);
-//
-//        assertEquals(5, testDestinationList.printAllDestinationList());
-//    }
-//
-//    @Test
-//    void testPrintDestinationListByContinent() {
-//        testDestinationList.addCity(Vancouver);
-//        testDestinationList.addCity(Richmond);
-//        testDestinationList.addCity(Burnaby);
-//        testDestinationList.addCity(London);
-//        testDestinationList.addCity(France);
-//
-//        assertEquals(2, testCitiesByRating.size());
-//    }
-//
-//    @Test
-//    void testPrintDestinationListByRatings() {
-//        testDestinationList.addCity(Vancouver);
-//        testDestinationList.addCity(Richmond);
-//        testDestinationList.addCity(Burnaby);
-//        testDestinationList.addCity(London);
-//        testDestinationList.addCity(France);
-//
-//        List<City> testCitiesByRating = testDestinationList.getCitiesByRating(5);
 }
 
