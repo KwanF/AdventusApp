@@ -29,7 +29,7 @@ public class DestinationList {
         return (this.cities.contains(city));
     }
 
-    // EFFECTS: Returns the cities that has the given rating
+    // EFFECTS: Returns the cities that have the given rating
     public List<City> getAllCities() {
         List<City> allCities = new ArrayList<>();
 
@@ -39,7 +39,7 @@ public class DestinationList {
         return allCities;
     }
 
-    // EFFECTS: Returns the cities that has the given rating
+    // EFFECTS: Returns the cities that have the given rating
     public List<City> getCitiesByRating(int rating) {
         List<City> citiesByRating = new ArrayList<>();
 
@@ -63,44 +63,6 @@ public class DestinationList {
         }
         return citiesByContinent;
     }
-
-
-    // EFFECTS: Prints out all cities in the destinations list
-    public void printAllDestinationList() {
-
-        System.out.println("Here's your travel destination list: \n");
-        for (City c : this.cities) {
-            System.out.println("'" + c.getName());
-        }
-    }
-
-//    // REQUIRES: An integer rating from 1-5
-//    // EFFECTS: Prints out the list of cities with the given rating
-//    public void printDestinationListByRatings(int rating) {
-//
-//        System.out.println("Here's your travel destination list filtered by rating: \n");
-//        for (City c : this.cities) {
-//            if (c.getRating() == rating) {
-//                System.out.println("'" + c.getName());
-//            }
-//        }
-//
-//    }
-
-
-//    // REQUIRES: A integer representing a continent
-//    // EFFECTS: Prints out the list of cities in the given continent
-//    public void printDestinationListByContinent(int continentNum) {
-//        Continent continent;
-//        continent = convertContinentNum(continentNum);
-//
-//        System.out.println("Here's your travel destination list filtered by continent: \n");
-//        for (City c : this.cities) {
-//            if (c.getContinent().equals(continent)) {
-//                System.out.println("'" + c.getName());
-//            }
-//        }
-//    }
 
     // REQUIRES: An integer representing a continent
     // EFFECTS: Returns a continent corresponding to the integer

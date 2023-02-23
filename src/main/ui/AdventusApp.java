@@ -98,7 +98,9 @@ public class AdventusApp {
 
         newCity = new City(name, rating, continent);
         mainList.addCity(newCity);
-        mainList.printAllDestinationList();
+        for (City c : mainList.getAllCities()) {
+            System.out.println("'" + c.getName());
+        }
     }
 
     // REQUIRES: An integer
