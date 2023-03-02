@@ -50,7 +50,6 @@ public class DestinationListTest {
 
         assertTrue(testDestinationList.containsCity(Vancouver));
         assertFalse(testDestinationList.containsCity(Richmond));
-
     }
 
     @Test
