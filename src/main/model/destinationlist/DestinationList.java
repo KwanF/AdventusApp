@@ -14,7 +14,7 @@ public class DestinationList implements Writable {
     private String name;
     private List<City> cities; // all cities added to the destination list
 
-    // EFFECTS: Constructs a new destination list
+    // EFFECTS: Constructs a new destination list and empty list of cities
     public DestinationList(String name) {
         this.name = name;
         this.cities = new ArrayList<>();
@@ -24,16 +24,15 @@ public class DestinationList implements Writable {
         return name;
     }
 
-    // REQUIRES: A city
+
     // MODIFIES: this
-    // EFFECTS: Adds a city to the list
+    // EFFECTS: adds a city to the list
     public void addCity(City city) {
         this.cities.add(city);
     }
 
-    // REQUIRES: A city
     // MODIFIES: this
-    // EFFECTS: Removes the given city from the list
+    // EFFECTS: removes the given city from the list
     public boolean removeCity(String cityToRemove) {
         City removeThisCity = null;
 
@@ -45,15 +44,13 @@ public class DestinationList implements Writable {
         return this.cities.remove(removeThisCity);
     }
 
-
     // REQUIRES: A city
-    // MODIFIES:
     // EFFECTS: Returns true if the destination list contains the requested city, false otherwise
     public boolean containsCity(City city) {
         return (this.cities.contains(city));
     }
 
-    // EFFECTS: Returns the cities that have the given rating
+    // EFFECTS: Returns all cities in the destination list
     public List<City> getAllCities() {
         List<City> allCities = new ArrayList<>();
 
@@ -61,6 +58,11 @@ public class DestinationList implements Writable {
             allCities.add(c);
         }
         return allCities;
+    }
+
+    // EFFECTS: returns number of cities in this destination list
+    public int numCities() {
+        return cities.size();
     }
 
     // EFFECTS: Returns the cities that have the given rating

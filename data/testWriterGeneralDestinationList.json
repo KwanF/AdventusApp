@@ -1,0 +1,15 @@
+{
+    "cities": [
+        {
+            "continent": "ASIA",
+            "name": "tokyo",
+            "rating": 5
+        },
+        {
+            "continent": "OCEANIA",
+            "name": "perth",
+            "rating": 4
+        }
+    ],
+    "name": "My destination list"
+}

@@ -1,0 +1,15 @@
+{
+  "cities": [
+    {
+      "continent": "NORTH_AMERICA",
+      "name": "vancouver",
+      "rating": 5
+    },
+    {
+      "continent": "EUROPE",
+      "name": "london",
+      "rating": 4
+    }
+  ],
+  "name": "My destination list"
+}
