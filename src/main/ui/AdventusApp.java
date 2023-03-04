@@ -13,7 +13,6 @@ import java.util.Scanner;
 
 // Adventus city travelled tracker
 public class AdventusApp {
-    private DestinationList mainList;
     private Scanner input;
 
     private Continent continent;
@@ -48,8 +47,7 @@ public class AdventusApp {
     private void runAdventus() {
         boolean keepGoing = true;
         String command = null;
-
-        init();
+        input = new Scanner(System.in);
 
         while (keepGoing) {
             displayMenu();
@@ -85,14 +83,6 @@ public class AdventusApp {
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: initializes a destination list
-    // Code based on the TellerApp provided in the CPSC 210 course
-    private void init() {
-        mainList = new DestinationList("Kwan's Destination List");
-        input = new Scanner(System.in);
-        input.useDelimiter("\n");
-    }
 
     // EFFECTS: displays menu of options to user
     // Code based on the TellerApp provided in the CPSC 210 course
@@ -123,8 +113,8 @@ public class AdventusApp {
         continent = convertContinentNum(continentNum);
 
         newCity = new City(name, rating, continent);
-        mainList.addCity(newCity);
-        for (City c : mainList.getAllCities()) {
+        destinationList.addCity(newCity);
+        for (City c : destinationList.getAllCities()) {
             System.out.println("'" + c.getName());
         }
     }
@@ -136,11 +126,11 @@ public class AdventusApp {
         input.nextLine();
         name = input.nextLine();
 
-        mainList.removeCity(name);
+        destinationList.removeCity(name);
         System.out.println("\nRemoved: " + name);
         System.out.println("\nYour new list:");
 
-        for (City c : mainList.getAllCities()) {
+        for (City c : destinationList.getAllCities()) {
             System.out.println("'" + c.getName());
         }
     }
@@ -175,7 +165,7 @@ public class AdventusApp {
         if (criteria.equals("ratings")) {
             displayRatingsMenu();
             ratingRequested = input.nextInt();
-            List<City> citiesByRating = mainList.getCitiesByRating(ratingRequested);
+            List<City> citiesByRating = destinationList.getCitiesByRating(ratingRequested);
 
             for (City c : citiesByRating) {
                 System.out.println("'" + c.getName());
@@ -185,13 +175,13 @@ public class AdventusApp {
             displayContinentMenu();
             continentRequested = input.nextInt();
             continent = convertContinentNum(continentRequested);
-            List<City> citiesByContinent = mainList.getCitiesByContinent(continent);
+            List<City> citiesByContinent = destinationList.getCitiesByContinent(continent);
 
             for (City c : citiesByContinent) {
                 System.out.println("'" + c.getName());
             }
         } else {
-            for (City c : mainList.getAllCities()) {
+            for (City c : destinationList.getAllCities()) {
                 System.out.println("'" + c.getName());
             }
         }
