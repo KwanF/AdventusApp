@@ -1,10 +1,13 @@
 package ui;
 
-
 import model.city.City;
 import model.city.Continent;
 import model.destinationlist.DestinationList;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,7 +18,6 @@ public class AdventusApp {
 
     private Continent continent;
     private City newCity;
-    private City removeCity;
 
     private String criteria;
     private String name;
@@ -25,9 +27,18 @@ public class AdventusApp {
     private int continentRequested;
     private int ratingRequested;
 
+    private static final String JSON_STORE = "./data/destinationlist.json";
+    private DestinationList destinationList;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
 
-    //EFFECTS: runs the Adventus application
-    public AdventusApp() {
+
+    //EFFECTS: constructs and runs the Adventus application
+    public AdventusApp() throws FileNotFoundException {
+        input = new Scanner(System.in);
+        destinationList = new DestinationList("Kwan's destination list");
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
         runAdventus();
     }
 
@@ -65,6 +76,10 @@ public class AdventusApp {
             viewCities();
         } else if (command.equals("r")) {
             doRemoveCity();
+        } else if (command.equals("s")) {
+            saveDestinationList();
+        } else if (command.equals("l")) {
+            loadDestinationList();
         } else {
             System.out.println("Selection not valid...");
         }
@@ -74,7 +89,7 @@ public class AdventusApp {
     // EFFECTS: initializes a destination list
     // Code based on the TellerApp provided in the CPSC 210 course
     private void init() {
-        mainList = new DestinationList();
+        mainList = new DestinationList("Kwan's Destination List");
         input = new Scanner(System.in);
         input.useDelimiter("\n");
     }
@@ -86,6 +101,8 @@ public class AdventusApp {
         System.out.println("\ta -> Add a city");
         System.out.println("\tv -> View cities saved");
         System.out.println("\tr -> Remove a saved city");
+        System.out.println("\ts -> Save destination list to file");
+        System.out.println("\tl -> Load destination list from file");
         System.out.println("\tq -> quit\n");
     }
 
@@ -203,7 +220,6 @@ public class AdventusApp {
         }
     }
 
-
     // EFFECTS: Displays a menu of ratings that users can assign to a city
     private void displayRatingsMenu() {
         System.out.println("\nSelect from:");
@@ -226,6 +242,28 @@ public class AdventusApp {
         System.out.println("\t7 -> SOUTH_AMERICA");
     }
 
+    // EFFECTS: saves the workroom to file
+    private void saveDestinationList() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(destinationList);
+            jsonWriter.close();
+            System.out.println("Saved " + destinationList.getName() + " to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads workroom from file
+    private void loadDestinationList() {
+        try {
+            destinationList = jsonReader.read();
+            System.out.println("Loaded " + destinationList.getName() + " from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
+    }
 
 }
 

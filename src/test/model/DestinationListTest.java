@@ -20,7 +20,7 @@ public class DestinationListTest {
 
     @BeforeEach
     public void runBefore() {
-        testDestinationList = new DestinationList();
+        testDestinationList = new DestinationList("Kwan's destination list");
         Vancouver = new City("vancouver", 5, Continent.NORTH_AMERICA);
         Richmond = new City("richmond", 3, Continent.NORTH_AMERICA);
         Burnaby = new City("burnaby", 1, Continent.NORTH_AMERICA);
@@ -31,7 +31,7 @@ public class DestinationListTest {
 
     @Test
     public void testDestinationList() {
-        testDestinationList = new DestinationList();
+        testDestinationList = new DestinationList("Kwan's destination list");
     }
 
     @Test

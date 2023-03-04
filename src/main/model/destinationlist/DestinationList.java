@@ -2,17 +2,26 @@ package model.destinationlist;
 
 import model.city.City;
 import model.city.Continent;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // Represents a list of destinations having a list of cities that the user has visited
-public class DestinationList {
+public class DestinationList implements Writable {
+    private String name;
     private List<City> cities; // all cities added to the destination list
 
     // EFFECTS: Constructs a new destination list
-    public DestinationList() {
+    public DestinationList(String name) {
+        this.name = name;
         this.cities = new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
     }
 
     // REQUIRES: A city
@@ -98,5 +107,26 @@ public class DestinationList {
             return Continent.SOUTH_AMERICA;
 
         }
+    }
+
+    // Code referenced from JsonSerializationDemo
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("cities", citiesToJson());
+        return json;
+    }
+
+    // Code referenced from JsonSerializationDemo
+    // EFFECTS: returns cities in this DestinationList as a JSON array
+    private JSONArray citiesToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (City c : cities) {
+            jsonArray.put(c.toJson());
+        }
+
+        return jsonArray;
     }
 }

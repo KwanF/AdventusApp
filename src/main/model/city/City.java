@@ -1,6 +1,9 @@
 package model.city;
 
-public class City {
+import org.json.JSONObject;
+import persistence.Writable;
+
+public class City implements Writable {
 
     private final String name;
     private final int rating;
@@ -25,6 +28,16 @@ public class City {
 
     public Continent getContinent() {
         return continent;
+    }
+
+    // Code referenced from JsonSerializationDemo
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("rating", rating);
+        json.put("continent", continent);
+        return json;
     }
 
 }
