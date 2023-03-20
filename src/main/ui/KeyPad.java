@@ -19,7 +19,7 @@ public class KeyPad extends JPanel implements KeyListener {
         keyHandler = new ClickHandler();
         setLayout(new BorderLayout());
         JPanel keyPanel = new JPanel();
-        keyPanel.setLayout(new GridLayout(4,3));
+        keyPanel.setLayout(new GridLayout(5,3));
         addButtons(keyPanel);
         add(keyPanel, BorderLayout.CENTER);
         Box hbox = Box.createHorizontalBox();
@@ -35,23 +35,28 @@ public class KeyPad extends JPanel implements KeyListener {
      * @param p  the button panel
      */
     private void addButtons(JPanel p) {
-        keys = new JButton[12];
-
-        for (int i = 0; i < 9; i++) {
+        keys = new JButton[14];
+        for (int i = 0; i < 7; i++) {
             keys[i] = new JButton(Integer.toString(i + 1));
             keys[i].addActionListener(keyHandler);
             p.add(keys[i]);
         }
-
-        keys[9] = new JButton(CLR_STR);
+        keys[8] = new JButton("c");
+        keys[8].addActionListener(keyHandler);
+        p.add(keys[8]);
+        keys[9] = new JButton("l");
         keys[9].addActionListener(keyHandler);
         p.add(keys[9]);
-        keys[10] = new JButton("0");
+        keys[10] = new JButton("q");
         keys[10].addActionListener(keyHandler);
         p.add(keys[10]);
-        keys[11] = new JButton("#");
+        keys[11] = new JButton("r");
         keys[11].addActionListener(keyHandler);
         p.add(keys[11]);
+        keys[12] = new JButton("s");
+        keys[12].addActionListener(keyHandler);
+        p.add(keys[12]);
+
     }
 
 

@@ -1,126 +1,445 @@
 package ui;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.FileNotFoundException;
+import java.awt.event.ActionListener;
+import java.io.*;
+import java.util.Vector;
+import java.util.stream.Collectors;
 
-// UI Development based off of the AlarmSystem codebase from CPSC 210
-public class AdventusAppUI extends JFrame {
-    private static final int WIDTH = 800;
-    private static final int HEIGHT = 600;
-    private static final String FILE_DESCRIPTOR = "...file";
-    private static final String SCREEN_DESCRIPTOR = "...screen";
-    private AdventusApp aa;
-    private KeyPad kp;
-    private JComboBox<String> printCombo;
-    private JDesktopPane desktop;
-    private JInternalFrame controlPanel;
+// UI Development based off of the AlarmSystem codebase from CPSC 210 and Java's ListDemo.java demo
+public class AdventusAppUI extends JPanel implements
+        ListSelectionListener {
 
-    // Constructor sets up button panel, key pad and visual alarm status window.
+    private JList list;
+    private DefaultListModel listModel;
+
+    private static final String JSON_STORE = "./data/destinationlist.json";
+    private static final String addCityString = "Add";
+    private static final String removeCityString = "Remove";
+    private static final String saveString = "Save";
+    private static final String loadString = "Load";
+    private JButton addCityButton;
+    private JButton removeCityButton;
+    private JButton saveButton;
+    private JButton loadButton;
+    private JTextField cityName;
+    private JScrollPane listScrollPane;
+
+//    private static final int WIDTH = 800;
+//    private static final int HEIGHT = 600;
+//    private static final String FILE_DESCRIPTOR = "...file";
+//    private static final String SCREEN_DESCRIPTOR = "...screen";
+//    private AdventusApp aa;
+//    private KeyPad kp;
+//    private JComboBox<String> printCombo;
+//    private JDesktopPane desktop;
+//    private JInternalFrame controlPanel;
+
+    // Constructor sets up button panel and field form.
     public AdventusAppUI() {
+        super(new BorderLayout());
 
+        listModel = new DefaultListModel();
+        listModel.addElement("Vancouver");
 
-        desktop = new JDesktopPane();
-        desktop.addMouseListener(new DesktopFocusAction());
-        controlPanel = new JInternalFrame("Control Panel", false, false, false, false);
-        controlPanel.setLayout(new BorderLayout());
+        //Create the list and put it in a scroll pane.
+        list = new JList(listModel);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.setSelectedIndex(0);
+        list.addListSelectionListener(this);
+        list.setVisibleRowCount(5);
+        JScrollPane listScrollPane = new JScrollPane(list);
 
-        setContentPane(desktop);
-        setTitle("Adventus Travel App Tracker");
-        setSize(WIDTH, HEIGHT);
+        AddCityListener addCityListener = getAddCityListener();
 
-        addButtonPanel();
-        addMenu();
-        addKeyPad();
+        removeCityButton = new JButton(removeCityString);
+        removeCityButton.setActionCommand(removeCityString);
+        removeCityButton.addActionListener(new RemoveCityListener());
 
-        controlPanel.pack();
-        controlPanel.setVisible(true);
-        desktop.add(controlPanel);
+        saveButton = new JButton(saveString);
+        SaveListener saveListener = new SaveListener(saveButton);
+        saveButton.setActionCommand(saveString);
+        saveButton.addActionListener(saveListener);
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        centreOnScreen();
-        setVisible(true);
+        loadButton = new JButton(loadString);
+        LoadListener loadListener = new LoadListener(loadButton);
+        loadButton.setActionCommand(loadString);
+        loadButton.addActionListener(loadListener);
+
+        setCityListener(addCityListener);
+
+        addButtonsPanel(listScrollPane);
+
     }
+
+    private void setCityListener(AddCityListener addCityListener) {
+        cityName = new JTextField(10);
+        cityName.addActionListener(addCityListener);
+        cityName.getDocument().addDocumentListener(addCityListener);
+        String name = listModel.getElementAt(
+                list.getSelectedIndex()).toString();
+    }
+
+    private AddCityListener getAddCityListener() {
+        addCityButton = new JButton(addCityString);
+        AddCityListener addCityListener = new AddCityListener(addCityButton);
+        addCityButton.setActionCommand(addCityString);
+        addCityButton.addActionListener(addCityListener);
+        addCityButton.setEnabled(false);
+        return addCityListener;
+    }
+
+    private void addButtonsPanel(JScrollPane listScrollPane) {
+        JPanel buttonPane = new JPanel();
+        buttonPane.setLayout(new BoxLayout(buttonPane,
+                BoxLayout.LINE_AXIS));
+        buttonPane.add(removeCityButton);
+        buttonPane.add(Box.createHorizontalStrut(5));
+        buttonPane.add(new JSeparator(SwingConstants.VERTICAL));
+        buttonPane.add(Box.createHorizontalStrut(5));
+        buttonPane.add(cityName);
+        buttonPane.add(addCityButton);
+        buttonPane.add(saveButton);
+        buttonPane.add(loadButton);
+        buttonPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        add(listScrollPane, BorderLayout.CENTER);
+        add(buttonPane, BorderLayout.PAGE_END);
+    }
+
+
+    class RemoveCityListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            int index = list.getSelectedIndex();
+            listModel.remove(index);
+
+            int size = listModel.getSize();
+
+            if (size == 0) { //Empty city list, disable removing a city
+                removeCityButton.setEnabled(false);
+
+            } else { //Select an index.
+                if (index == listModel.getSize()) {
+                    //removed item in last position
+                    index--;
+                }
+
+                list.setSelectedIndex(index);
+                list.ensureIndexIsVisible(index);
+            }
+        }
+    }
+
+    //This listener is shared by the text field and the hire button.
+    class AddCityListener implements ActionListener, DocumentListener {
+        private boolean alreadyEnabled = false;
+        private JButton button;
+
+        public AddCityListener(JButton button) {
+            this.button = button;
+        }
+
+        //Required by ActionListener.
+        public void actionPerformed(ActionEvent e) {
+            String name = cityName.getText();
+
+            //User didn't type in a unique name...
+            if (name.equals("") || alreadyInList(name)) {
+                Toolkit.getDefaultToolkit().beep();
+                cityName.requestFocusInWindow();
+                cityName.selectAll();
+                return;
+            }
+
+            int index = list.getSelectedIndex(); //get selected index
+            if (index == -1) { //no selection, so insert at beginning
+                index = 0;
+            } else {           //add after the selected item
+                index++;
+            }
+
+            listModel.insertElementAt(cityName.getText(), index);
+            //If we just wanted to add to the end, we'd do this:
+            //listModel.addElement(employeeName.getText());
+
+            //Reset the text field.
+            cityName.requestFocusInWindow();
+            cityName.setText("");
+
+            //Select the new item and make it visible.
+            list.setSelectedIndex(index);
+            list.ensureIndexIsVisible(index);
+        }
+
+
+        //This method tests for string equality. You could certainly
+        //get more sophisticated about the algorithm.  For example,
+        //you might want to ignore white space and capitalization.
+        protected boolean alreadyInList(String name) {
+            return listModel.contains(name);
+        }
+
+        //Required by DocumentListener.
+        public void insertUpdate(DocumentEvent e) {
+            enableButton();
+        }
+
+        //Required by DocumentListener.
+        public void removeUpdate(DocumentEvent e) {
+            handleEmptyTextField(e);
+        }
+
+        //Required by DocumentListener.
+        public void changedUpdate(DocumentEvent e) {
+            if (!handleEmptyTextField(e)) {
+                enableButton();
+            }
+        }
+
+        private void enableButton() {
+            if (!alreadyEnabled) {
+                button.setEnabled(true);
+            }
+        }
+
+        private boolean handleEmptyTextField(DocumentEvent e) {
+            if (e.getDocument().getLength() <= 0) {
+                button.setEnabled(false);
+                alreadyEnabled = false;
+                return true;
+            }
+            return false;
+        }
+    }
+
+    class SaveListener implements ActionListener {
+        private JButton button;
+
+        public SaveListener(JButton button) {
+            this.button = button;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            try {
+                BufferedWriter bw = new BufferedWriter(new FileWriter("destinationlist.txt"));
+                for (int i = 0; i < list.getModel().getSize(); i++) {
+                    bw.write((String) list.getModel().getElementAt(i));
+                    bw.newLine();
+                }
+                bw.close();
+            } catch (IOException exception) {
+                System.out.println("\nIO error");
+            }
+        }
+    }
+
+    class LoadListener implements ActionListener {
+        private JButton button;
+
+        public LoadListener(JButton button) {
+            this.button = button;
+        }
+
+        // Code referenced from java2s.com tutorial for loading TXT file into a JList
+        public void actionPerformed(ActionEvent e) {
+            File sourceFile = new File("./destinationlist.txt");
+            FileReader fr = null;
+            fr = getFileReader(sourceFile);
+            BufferedReader br = new BufferedReader(fr);
+            Vector<String> lines = new Vector<String>();
+            String line;
+            int index = 0;
+            listModel.removeAllElements();
+            addToJList(br, lines, index);
+            JOptionPane.showMessageDialog(null, new JScrollPane(new JList(lines)));
+            try {
+                fr.close();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+        private void addToJList(BufferedReader br, Vector<String> lines, int index) {
+            String line;
+            while (true) {
+                try {
+                    if (!((line = br.readLine()) != null)) {
+                        break;
+                    }
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                lines.add(line);
+                listModel.insertElementAt(line, index);
+                index++;
+            }
+        }
+
+        private FileReader getFileReader(File sourceFile) {
+            FileReader fr;
+            try {
+                fr = new FileReader(sourceFile);
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+            return fr;
+        }
+    }
+
+    //This method is required by ListSelectionListener.
+    public void valueChanged(ListSelectionEvent e) {
+        if (e.getValueIsAdjusting() == false) {
+
+            if (list.getSelectedIndex() == -1) {
+                //No selection, disable fire button.
+                removeCityButton.setEnabled(false);
+
+            } else {
+                //Selection, enable the fire button.
+                removeCityButton.setEnabled(true);
+            }
+        }
+    }
+
+    private static void createAndShowGUI() {
+        //Create and set up the window.
+        JFrame frame = new JFrame("Adventus App");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        //Create and set up the content pane.
+        JComponent newContentPane = new AdventusAppUI();
+        newContentPane.setOpaque(true); //content panes must be opaque
+        frame.setContentPane(newContentPane);
+
+        //Display the window.
+        frame.pack();
+        frame.setVisible(true);
+    }
+
+    // Starts the application
+    public static void main(String[] args) {
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI();
+            }
+        });
+    }
+}
+
+//    // Adds menu bar.
+//    private void addMenu() {
+//        JMenuBar menuBar = new JMenuBar();
+//        JMenu listMenu = new JMenu("Destination List");
+//        listMenu.setMnemonic('D');
+////        addMenuItem(sensorMenu, new AddSensorAction(),
+////                KeyStroke.getKeyStroke("control D"));
+//        menuBar.add(listMenu);
+//
+//        setJMenuBar(menuBar);
+//    }
+
+//        desktop = new JDesktopPane();
+//        desktop.addMouseListener(new DesktopFocusAction());
+//        controlPanel = new JInternalFrame("Control Panel", false, false, false, false);
+//        controlPanel.setLayout(new BorderLayout());
+//
+//        setContentPane(desktop);
+//        setTitle("Adventus Travel App Tracker");
+//        setSize(WIDTH, HEIGHT);
+//
+//        addButtonPanel();
+//        addMenu();
+//        addKeyPad();
+//
+//        controlPanel.pack();
+//        controlPanel.setVisible(true);
+//        desktop.add(controlPanel);
+//
+//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//        centreOnScreen();
+//        setVisible(true);
 
 // Helper to add control buttons.
 
-    private void addButtonPanel() {
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(3, 1));
-//        buttonPanel.add(new JButton(new AddACity()));
-//        buttonPanel.add(new JButton(new ViewAllCities()));
-//        buttonPanel.add(new JButton(new ViewCityByRating()));
+//    private void addButtonPanel() {
+//        JPanel buttonPane = new JPanel();
+//        buttonPane.setLayout(new BoxLayout(buttonPane,
+//                BoxLayout.LINE_AXIS));
+//        buttonPane.add(removeCityButton);
+//        buttonPane.add(Box.createHorizontalStrut(5));
+//        buttonPane.add(new JSeparator(SwingConstants.VERTICAL));
+//        buttonPane.add(Box.createHorizontalStrut(5));
+//        buttonPane.add(cityName);
+//        buttonPane.add(addCityButton);
+//        buttonPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+//
+//        add(listScrollPane, BorderLayout.CENTER);
+//        add(buttonPane, BorderLayout.PAGE_END);
+//    }
 
-        buttonPanel.add(new JButton("Add a city"));
-        buttonPanel.add(new JButton("View all cities"));
-        buttonPanel.add(new JButton("View cities by rating"));
-
-        controlPanel.add(buttonPanel, BorderLayout.WEST);
-    }
-
-// Adds menu bar.
-    private void addMenu() {
-        JMenuBar menuBar = new JMenuBar();
-        JMenu sensorMenu = new JMenu("Destination List");
-        sensorMenu.setMnemonic('D');
-//        addMenuItem(sensorMenu, new AddSensorAction(),
-//                KeyStroke.getKeyStroke("control D"));
-        menuBar.add(sensorMenu);
-
-        setJMenuBar(menuBar);
-    }
-
-// Adds an item with given handler to the given menu
-
-    private void addMenuItem(JMenu theMenu, AbstractAction action, KeyStroke accelerator) {
-        JMenuItem menuItem = new JMenuItem(action);
-        menuItem.setMnemonic(menuItem.getText().charAt(0));
-        menuItem.setAccelerator(accelerator);
-        theMenu.add(menuItem);
-    }
+//        JPanel buttonPanel = new JPanel();
+//        buttonPanel.setLayout(new GridLayout(3, 1));
+////        buttonPanel.add(new JButton(new AddACity()));
+////        buttonPanel.add(new JButton(new ViewAllCities()));
+////        buttonPanel.add(new JButton(new ViewCityByRating()));
+//
+//        buttonPanel.add(new JButton("Add a city"));
+//        buttonPanel.add(new JButton("View all cities"));
+//
+//        controlPanel.add(buttonPanel, BorderLayout.WEST);
 
 
- //  Helper to add keypad to main application window
 
-    private void addKeyPad() {
-        kp = new KeyPad();
-        addKeyListener(kp);
-        controlPanel.add(kp, BorderLayout.CENTER);
-    }
+//
+//// Adds an item with given handler to the given menu
+//    private void addMenuItem(JMenu theMenu, AbstractAction action, KeyStroke accelerator) {
+//        JMenuItem menuItem = new JMenuItem(action);
+//        menuItem.setMnemonic(menuItem.getText().charAt(0));
+//        menuItem.setAccelerator(accelerator);
+//        theMenu.add(menuItem);
+//    }
 
-//  Helper to centre main application window on desktop
 
-    private void centreOnScreen() {
-        int width = Toolkit.getDefaultToolkit().getScreenSize().width;
-        int height = Toolkit.getDefaultToolkit().getScreenSize().height;
-        setLocation((width - getWidth()) / 2, (height - getHeight()) / 2);
-    }
+// //  Helper to add keypad to main application window
+//    private void addKeyPad() {
+//        kp = new KeyPad();
+//        addKeyListener(kp);
+//        controlPanel.add(kp, BorderLayout.CENTER);
+//    }
 
-//    // Represents action to be taken when user wants to add a new code to the system.
-//    private class AddACity extends AbstractAction {
+////  Helper to centre main application window on desktop
+//    private void centreOnScreen() {
+//        int width = Toolkit.getDefaultToolkit().getScreenSize().width;
+//        int height = Toolkit.getDefaultToolkit().getScreenSize().height;
+//        setLocation((width - getWidth()) / 2, (height - getHeight()) / 2);
+//    }
+
+//    // Represents action to be taken when user wants to add a new city to their list.
+//    private static class AddACity extends AbstractAction {
 //
 //        AddACity() {
-//            super("Add City");
+//            super("Add a City");
 //        }
 //
 //        @Override
 //        public void actionPerformed(ActionEvent evt) {
-//            AlarmCode alarmCode = new AlarmCode(kp.getCode());
-//            kp.clearCode();
 //            try {
-//                ac.addCode(alarmCode);
-//            } catch (NotValidCodeException e) {
-//                JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
-//                        JOptionPane.ERROR_MESSAGE);
+//                AdventusApp aa = new AdventusApp();
+//                aa.doAddCity();
+//            } catch (FileNotFoundException e) {
+//                throw new RuntimeException(e);
 //            }
 //        }
 //    }
 //
-//    // Represents action to be taken when user wants to add a new code to the system.
-//    private class ViewAllCities extends AbstractAction {
+//    // Represents action to be taken when user wants to view all cities in their list
+//    private static class ViewAllCities extends AbstractAction {
 //
 //        ViewAllCities() {
 //            super("View all cities");
@@ -128,53 +447,23 @@ public class AdventusAppUI extends JFrame {
 //
 //        @Override
 //        public void actionPerformed(ActionEvent evt) {
-//            AlarmCode alarmCode = new AlarmCode(kp.getCode());
-//            kp.clearCode();
+//
 //            try {
-//                ac.addCode(alarmCode);
-//            } catch (NotValidCodeException e) {
-//                JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
-//                        JOptionPane.ERROR_MESSAGE);
+//                AdventusApp aa = new AdventusApp();
+//                aa.viewCities();
+//            } catch (FileNotFoundException e) {
+//                throw new RuntimeException(e);
 //            }
 //        }
 //    }
 //
-//    // Represents action to be taken when user wants to add a new code to the system.
-//    private class ViewCitiesByRating extends AbstractAction {
 //
-//        ViewCitiesByRating() {
-//            super("View cities by rating");
-//        }
-//
+//    // Represents action to be taken when user clicks desktop to switch focus.
+//    private class DesktopFocusAction extends MouseAdapter {
 //        @Override
-//        public void actionPerformed(ActionEvent evt) {
-//            AlarmCode alarmCode = new AlarmCode(kp.getCode());
-//            kp.clearCode();
-//            try {
-//                ac.addCode(alarmCode);
-//            } catch (NotValidCodeException e) {
-//                JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
-//                        JOptionPane.ERROR_MESSAGE);
-//            }
+//        public void mouseClicked(MouseEvent e) {
+//            AdventusAppUI.this.requestFocusInWindow();
 //        }
 //    }
 
-    // Represents action to be taken when user clicks desktop to switch focus.
-    private class DesktopFocusAction extends MouseAdapter {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            AdventusAppUI.this.requestFocusInWindow();
-        }
-    }
 
-    // Starts the application
-    public static void main(String[] args) {
-        new AdventusAppUI();
-
-        try {
-            new AdventusApp();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-}

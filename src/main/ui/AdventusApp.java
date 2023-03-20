@@ -98,7 +98,7 @@ public class AdventusApp {
 
     // REQUIRES: The city to be added does not exist already in the list
     // EFFECTS: Adds a city to the list
-    private void doAddCity() {
+    public void doAddCity() {
         System.out.println("Enter the name of the city you have visited:");
         input.nextLine();
         name = input.nextLine();
@@ -121,7 +121,7 @@ public class AdventusApp {
 
     // REQUIRES: The requested city to be removed needs to have already been added previously
     // EFFECTS: Removes a city from the list
-    private void doRemoveCity() {
+    public void doRemoveCity() {
         System.out.println("\nEnter the name of the city you want to remove:");
         input.nextLine();
         name = input.nextLine();
@@ -138,7 +138,7 @@ public class AdventusApp {
 
     // REQUIRES: An integer
     // EFFECTS: Returns a continent corresponding to the integer
-    private Continent convertContinentNum(int continentNum) {
+    public Continent convertContinentNum(int continentNum) {
         if (continentNum == 1) {
             return Continent.AFRICA;
         } else if (continentNum == 2) {
@@ -158,7 +158,7 @@ public class AdventusApp {
     }
 
     // EFFECTS: View the cities based on the user criteria
-    private void viewCities() {
+    public void viewCities() {
         System.out.println("\n");
         criteria = selectCriteria();
 
@@ -190,11 +190,11 @@ public class AdventusApp {
 
     // EFFECTS: prompts user to filter list based on rating or continent, and returns it
     // Code based on the TellerApp provided in the CPSC 210 course
-    private String selectCriteria() {
+    public String selectCriteria() {
         String selection = "";  // force entry into loop
 
         while (!(selection.equals("r") || selection.equals("c") || (selection.equals("a")))) {
-            System.out.println("press 'a' to show all items");
+            System.out.println("press 'a' to show all cities");
             System.out.println("press 'r' to filter by ratings");
             System.out.println("press 'c' to filter by continent");
             selection = input.next();
@@ -211,7 +211,7 @@ public class AdventusApp {
     }
 
     // EFFECTS: Displays a menu of ratings that users can assign to a city
-    private void displayRatingsMenu() {
+    public void displayRatingsMenu() {
         System.out.println("\nSelect from:");
         System.out.println("\t1 -> 1 star");
         System.out.println("\t2 -> 2 star");
@@ -221,7 +221,7 @@ public class AdventusApp {
     }
 
     // EFFECTS: Displays a menu of continents that users can assign to a city
-    private void displayContinentMenu() {
+    public void displayContinentMenu() {
         System.out.println("\nSelect from:");
         System.out.println("\t1 -> AFRICA");
         System.out.println("\t2 -> ANTARCTICA");
@@ -232,8 +232,8 @@ public class AdventusApp {
         System.out.println("\t7 -> SOUTH_AMERICA");
     }
 
-    // EFFECTS: saves the workroom to file
-    private void saveDestinationList() {
+    // EFFECTS: saves the destination list to file
+    public void saveDestinationList() {
         try {
             jsonWriter.open();
             jsonWriter.write(destinationList);
@@ -245,8 +245,8 @@ public class AdventusApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: loads workroom from file
-    private void loadDestinationList() {
+    // EFFECTS: loads destination list from file
+    public void loadDestinationList() {
         try {
             destinationList = jsonReader.read();
             System.out.println("Loaded " + destinationList.getName() + " from " + JSON_STORE);
