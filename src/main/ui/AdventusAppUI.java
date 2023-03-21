@@ -76,6 +76,8 @@ public class AdventusAppUI extends JPanel implements
 
         addButtonsPanel(listScrollPane);
 
+
+
     }
 
     private void setCityListener(AddCityListener addCityListener) {
@@ -297,11 +299,11 @@ public class AdventusAppUI extends JPanel implements
         if (e.getValueIsAdjusting() == false) {
 
             if (list.getSelectedIndex() == -1) {
-                //No selection, disable fire button.
+                //No selection, disable remove button.
                 removeCityButton.setEnabled(false);
 
             } else {
-                //Selection, enable the fire button.
+                //Selection, enable the remove button.
                 removeCityButton.setEnabled(true);
             }
         }
@@ -320,6 +322,8 @@ public class AdventusAppUI extends JPanel implements
         //Display the window.
         frame.pack();
         frame.setVisible(true);
+        ImageIcon icon = new ImageIcon("./adventus-splash-screen.png");
+        JOptionPane.showMessageDialog(null, "", "Welcome to", JOptionPane.INFORMATION_MESSAGE, icon);
     }
 
     // Starts the application
@@ -331,139 +335,4 @@ public class AdventusAppUI extends JPanel implements
         });
     }
 }
-
-//    // Adds menu bar.
-//    private void addMenu() {
-//        JMenuBar menuBar = new JMenuBar();
-//        JMenu listMenu = new JMenu("Destination List");
-//        listMenu.setMnemonic('D');
-////        addMenuItem(sensorMenu, new AddSensorAction(),
-////                KeyStroke.getKeyStroke("control D"));
-//        menuBar.add(listMenu);
-//
-//        setJMenuBar(menuBar);
-//    }
-
-//        desktop = new JDesktopPane();
-//        desktop.addMouseListener(new DesktopFocusAction());
-//        controlPanel = new JInternalFrame("Control Panel", false, false, false, false);
-//        controlPanel.setLayout(new BorderLayout());
-//
-//        setContentPane(desktop);
-//        setTitle("Adventus Travel App Tracker");
-//        setSize(WIDTH, HEIGHT);
-//
-//        addButtonPanel();
-//        addMenu();
-//        addKeyPad();
-//
-//        controlPanel.pack();
-//        controlPanel.setVisible(true);
-//        desktop.add(controlPanel);
-//
-//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//        centreOnScreen();
-//        setVisible(true);
-
-// Helper to add control buttons.
-
-//    private void addButtonPanel() {
-//        JPanel buttonPane = new JPanel();
-//        buttonPane.setLayout(new BoxLayout(buttonPane,
-//                BoxLayout.LINE_AXIS));
-//        buttonPane.add(removeCityButton);
-//        buttonPane.add(Box.createHorizontalStrut(5));
-//        buttonPane.add(new JSeparator(SwingConstants.VERTICAL));
-//        buttonPane.add(Box.createHorizontalStrut(5));
-//        buttonPane.add(cityName);
-//        buttonPane.add(addCityButton);
-//        buttonPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-//
-//        add(listScrollPane, BorderLayout.CENTER);
-//        add(buttonPane, BorderLayout.PAGE_END);
-//    }
-
-//        JPanel buttonPanel = new JPanel();
-//        buttonPanel.setLayout(new GridLayout(3, 1));
-////        buttonPanel.add(new JButton(new AddACity()));
-////        buttonPanel.add(new JButton(new ViewAllCities()));
-////        buttonPanel.add(new JButton(new ViewCityByRating()));
-//
-//        buttonPanel.add(new JButton("Add a city"));
-//        buttonPanel.add(new JButton("View all cities"));
-//
-//        controlPanel.add(buttonPanel, BorderLayout.WEST);
-
-
-
-//
-//// Adds an item with given handler to the given menu
-//    private void addMenuItem(JMenu theMenu, AbstractAction action, KeyStroke accelerator) {
-//        JMenuItem menuItem = new JMenuItem(action);
-//        menuItem.setMnemonic(menuItem.getText().charAt(0));
-//        menuItem.setAccelerator(accelerator);
-//        theMenu.add(menuItem);
-//    }
-
-
-// //  Helper to add keypad to main application window
-//    private void addKeyPad() {
-//        kp = new KeyPad();
-//        addKeyListener(kp);
-//        controlPanel.add(kp, BorderLayout.CENTER);
-//    }
-
-////  Helper to centre main application window on desktop
-//    private void centreOnScreen() {
-//        int width = Toolkit.getDefaultToolkit().getScreenSize().width;
-//        int height = Toolkit.getDefaultToolkit().getScreenSize().height;
-//        setLocation((width - getWidth()) / 2, (height - getHeight()) / 2);
-//    }
-
-//    // Represents action to be taken when user wants to add a new city to their list.
-//    private static class AddACity extends AbstractAction {
-//
-//        AddACity() {
-//            super("Add a City");
-//        }
-//
-//        @Override
-//        public void actionPerformed(ActionEvent evt) {
-//            try {
-//                AdventusApp aa = new AdventusApp();
-//                aa.doAddCity();
-//            } catch (FileNotFoundException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//    }
-//
-//    // Represents action to be taken when user wants to view all cities in their list
-//    private static class ViewAllCities extends AbstractAction {
-//
-//        ViewAllCities() {
-//            super("View all cities");
-//        }
-//
-//        @Override
-//        public void actionPerformed(ActionEvent evt) {
-//
-//            try {
-//                AdventusApp aa = new AdventusApp();
-//                aa.viewCities();
-//            } catch (FileNotFoundException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//    }
-//
-//
-//    // Represents action to be taken when user clicks desktop to switch focus.
-//    private class DesktopFocusAction extends MouseAdapter {
-//        @Override
-//        public void mouseClicked(MouseEvent e) {
-//            AdventusAppUI.this.requestFocusInWindow();
-//        }
-//    }
-
 
