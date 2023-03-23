@@ -10,36 +10,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Vector;
-import java.util.stream.Collectors;
 
-// UI Development based off of the AlarmSystem codebase from CPSC 210 and Java's ListDemo.java demo
-public class AdventusAppUI extends JPanel implements
-        ListSelectionListener {
+// AdventusApp for tracking cities visited. UI Development based off of Java's ListDemo.java demo
+public class AdventusAppUI extends JPanel implements ListSelectionListener {
 
     private JList list;
     private DefaultListModel listModel;
+    private Boolean[] annotations = null;
 
     private static final String JSON_STORE = "./data/destinationlist.json";
     private static final String addCityString = "Add";
     private static final String removeCityString = "Remove";
     private static final String saveString = "Save";
     private static final String loadString = "Load";
+    private static final String highlightString = "Highlight";
     private JButton addCityButton;
     private JButton removeCityButton;
     private JButton saveButton;
     private JButton loadButton;
+    private JButton highlightButton;
     private JTextField cityName;
     private JScrollPane listScrollPane;
-
-//    private static final int WIDTH = 800;
-//    private static final int HEIGHT = 600;
-//    private static final String FILE_DESCRIPTOR = "...file";
-//    private static final String SCREEN_DESCRIPTOR = "...screen";
-//    private AdventusApp aa;
-//    private KeyPad kp;
-//    private JComboBox<String> printCombo;
-//    private JDesktopPane desktop;
-//    private JInternalFrame controlPanel;
 
     // Constructor sets up button panel and field form.
     public AdventusAppUI() {
@@ -49,12 +40,7 @@ public class AdventusAppUI extends JPanel implements
         listModel.addElement("Vancouver");
 
         //Create the list and put it in a scroll pane.
-        list = new JList(listModel);
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.setSelectedIndex(0);
-        list.addListSelectionListener(this);
-        list.setVisibleRowCount(5);
-        JScrollPane listScrollPane = new JScrollPane(list);
+        JScrollPane listScrollPane = getjScrollPane();
 
         AddCityListener addCityListener = getAddCityListener();
 
@@ -75,11 +61,20 @@ public class AdventusAppUI extends JPanel implements
         setCityListener(addCityListener);
 
         addButtonsPanel(listScrollPane);
-
-
-
     }
 
+    // Helper method for the JScrollPane
+    private JScrollPane getjScrollPane() {
+        list = new JList(listModel);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.setSelectedIndex(0);
+        list.addListSelectionListener(this);
+        list.setVisibleRowCount(5);
+        JScrollPane listScrollPane = new JScrollPane(list);
+        return listScrollPane;
+    }
+
+    // Helper method for setting the City listener
     private void setCityListener(AddCityListener addCityListener) {
         cityName = new JTextField(10);
         cityName.addActionListener(addCityListener);
@@ -88,6 +83,7 @@ public class AdventusAppUI extends JPanel implements
                 list.getSelectedIndex()).toString();
     }
 
+    // Helper method of the Add City listener
     private AddCityListener getAddCityListener() {
         addCityButton = new JButton(addCityString);
         AddCityListener addCityListener = new AddCityListener(addCityButton);
@@ -97,6 +93,7 @@ public class AdventusAppUI extends JPanel implements
         return addCityListener;
     }
 
+    // EFFECT: Adds the buttons onto the GUI
     private void addButtonsPanel(JScrollPane listScrollPane) {
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new BoxLayout(buttonPane,
@@ -109,13 +106,14 @@ public class AdventusAppUI extends JPanel implements
         buttonPane.add(addCityButton);
         buttonPane.add(saveButton);
         buttonPane.add(loadButton);
+        buttonPane.add(highlightButton);
         buttonPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         add(listScrollPane, BorderLayout.CENTER);
         add(buttonPane, BorderLayout.PAGE_END);
     }
 
-
+    // EFFECT: Helper method for removing a city
     class RemoveCityListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             int index = list.getSelectedIndex();
@@ -138,7 +136,7 @@ public class AdventusAppUI extends JPanel implements
         }
     }
 
-    //This listener is shared by the text field and the hire button.
+    // This listener is shared by the text field and the add city button.
     class AddCityListener implements ActionListener, DocumentListener {
         private boolean alreadyEnabled = false;
         private JButton button;
@@ -204,12 +202,17 @@ public class AdventusAppUI extends JPanel implements
             }
         }
 
+        // MODIFIES: setEnabled
+        // EFFECTS: Flips the boolean value of setEnabled of a button
         private void enableButton() {
             if (!alreadyEnabled) {
                 button.setEnabled(true);
             }
         }
 
+        // REQUIRES: an existing DocumentEvent
+        // MODIFIES: alreadyEnabled
+        // EFFECTS: Returns true if length of e.getDocument() is zero or negative, false otherwise
         private boolean handleEmptyTextField(DocumentEvent e) {
             if (e.getDocument().getLength() <= 0) {
                 button.setEnabled(false);
@@ -220,6 +223,8 @@ public class AdventusAppUI extends JPanel implements
         }
     }
 
+    // MODIFIES: destinationlist.txt
+    // EFFECTS: Writes the content of the JList into a TXT file
     class SaveListener implements ActionListener {
         private JButton button;
 
@@ -241,6 +246,7 @@ public class AdventusAppUI extends JPanel implements
         }
     }
 
+    // EFFECTS: Reads the TXT file and loads it into a JList
     class LoadListener implements ActionListener {
         private JButton button;
 
@@ -294,7 +300,8 @@ public class AdventusAppUI extends JPanel implements
         }
     }
 
-    //This method is required by ListSelectionListener.
+
+    // EFFECTS: This method is required by ListSelectionListener.
     public void valueChanged(ListSelectionEvent e) {
         if (e.getValueIsAdjusting() == false) {
 
@@ -309,24 +316,26 @@ public class AdventusAppUI extends JPanel implements
         }
     }
 
+    // EFFECTS: Creates and shows the GUI
     private static void createAndShowGUI() {
-        //Create and set up the window.
+        // Create and set up the window.
         JFrame frame = new JFrame("Adventus App");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        //Create and set up the content pane.
+        // Create and set up the content pane.
         JComponent newContentPane = new AdventusAppUI();
         newContentPane.setOpaque(true); //content panes must be opaque
         frame.setContentPane(newContentPane);
 
-        //Display the window.
+        // Display the window.
         frame.pack();
         frame.setVisible(true);
         ImageIcon icon = new ImageIcon("./adventus-splash-screen.png");
         JOptionPane.showMessageDialog(null, "", "Welcome to", JOptionPane.INFORMATION_MESSAGE, icon);
     }
 
-    // Starts the application
+
+    // EFFECTS: Starts the application
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {

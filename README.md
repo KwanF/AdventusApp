@@ -15,4 +15,15 @@ This application will allow users to:
 
 This project is of interest to me because I think it would be convenient to have a central 
 repository of all the destinations I have travelled to and a rating function, so that years later when a friend
-asks me about my experience at a certain location, I won't risk forgetting the name and the details of my experiences.
+asks me about my experience at a certain location, I won't forget the name and the details of my experiences.
+
+# Instructions for Grader
+- Start the GUI application by running AdventusAppUI (Main is for the console application)
+- You can generate the first required action related to adding Xs to a Y by clicking the "Add" button at the bottom of 
+  the panel to add a city
+- You can generate the second required action related to adding Xs to a Y by clicking the "Remove" button at the 
+  bottom of the panel to remove a city
+- You can locate my visual component by running AdventusAppUI, as it is image is the splash screen that shows as a 
+  popup! The image is called "adventus-splash-screen.png" in the file explorer
+- You can save the state of my application by clicking the "Save" button at the bottom of the panel
+- You can reload the state of my application by clicking the "Load" button at the bottom of the panel
