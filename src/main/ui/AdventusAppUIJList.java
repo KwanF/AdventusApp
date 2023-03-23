@@ -12,7 +12,7 @@ import java.io.*;
 import java.util.Vector;
 
 // AdventusApp for tracking cities visited. UI Development based off of Java's ListDemo.java demo
-public class AdventusAppUI extends JPanel implements ListSelectionListener {
+public class AdventusAppUIJList extends JPanel implements ListSelectionListener {
 
     private JList list;
     private DefaultListModel listModel;
@@ -33,7 +33,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
     private JScrollPane listScrollPane;
 
     // Constructor sets up button panel and field form.
-    public AdventusAppUI() {
+    public AdventusAppUIJList() {
         super(new BorderLayout());
 
         listModel = new DefaultListModel();
@@ -106,6 +106,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
         buttonPane.add(addCityButton);
         buttonPane.add(saveButton);
         buttonPane.add(loadButton);
+        buttonPane.add(highlightButton);
         buttonPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         add(listScrollPane, BorderLayout.CENTER);
@@ -322,7 +323,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Create and set up the content pane.
-        JComponent newContentPane = new AdventusAppUI();
+        JComponent newContentPane = new AdventusAppUIJList();
         newContentPane.setOpaque(true); //content panes must be opaque
         frame.setContentPane(newContentPane);
 
@@ -336,7 +337,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
 
     // EFFECTS: Starts the application
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 createAndShowGUI();
             }
