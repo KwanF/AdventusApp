@@ -138,7 +138,7 @@ public class AdventusApp {
 
     // REQUIRES: An integer
     // EFFECTS: Returns a continent corresponding to the integer
-    public Continent convertContinentNum(int continentNum) {
+    public static Continent convertContinentNum(int continentNum) {
         if (continentNum == 1) {
             return Continent.AFRICA;
         } else if (continentNum == 2) {

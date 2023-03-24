@@ -33,6 +33,8 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
     private static final String removeCityString = "Remove";
     private static final String saveString = "Save";
     private static final String loadString = "Load";
+    private static final String[] continents = { "AFRICA", "ANTARCTICA", "ASIA", "EUROPE", "OCEANIA",
+            "NORTH AMERICA", "SOUTH AMERICA" };
     private JButton addCityButton;
     private JButton removeCityButton;
     private JButton saveButton;
@@ -40,11 +42,19 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
     private JTextField cityName;
     private JTextField cityRating = new JTextField(10);
     private JTextField cityContinent = new JTextField(10);
+    private JComboBox cityContinent2 = new JComboBox<>(continents);
     private JScrollPane listScrollPane;
+    private DestinationList destinationList;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
 
     // Constructor sets up button panel and field form.
     public AdventusAppUI() {
         super(new BorderLayout());
+
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
+        destinationList = new DestinationList("Kwan's destination list");
 
         listModel = new DefaultListModel();
         listModel.addElement("Vancouver, 5, North America");
@@ -102,7 +112,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
         return addCityListener;
     }
 
-    // EFFECT: Adds the Jbuttons and JTextfields onto the GUI
+    // EFFECT: Adds the Jbuttons, JTextfields and JComboBox onto the GUI
     private void addButtonsPanel(JScrollPane listScrollPane) {
         JPanel buttonPane = new JPanel();
         JLabel labelCityName = new JLabel("Enter city name: ");
@@ -117,7 +127,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
         buttonPane.add(labelCityRating);
         buttonPane.add(cityRating);
         buttonPane.add(labelCityContinent);
-        buttonPane.add(cityContinent);
+        buttonPane.add(cityContinent2);
         buttonPane.add(addCityButton);
         buttonPane.add(removeCityButton);
         buttonPane.add(saveButton);
@@ -161,15 +171,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
 
         //Required by ActionListener.
         public void actionPerformed(ActionEvent e) {
-            String name = cityName.getText();
-
-            //User didn't type in a unique name...
-            if (name.equals("") || alreadyInList(name)) {
-                Toolkit.getDefaultToolkit().beep();
-                cityName.requestFocusInWindow();
-                cityName.selectAll();
-                return;
-            }
+            Integer rating = Integer.parseInt(cityRating.getText());
 
             int index = list.getSelectedIndex(); //get selected index
             if (index == -1) { //no selection, so insert at beginning
@@ -178,8 +180,16 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
                 index++;
             }
 
+            // This is where the city name, rating and continent gets added to the JList
             listModel.insertElementAt(cityName.getText() + ", " + cityRating.getText()
-                    + ", " + cityContinent.getText(), index);
+                    + ", " + cityContinent2.getSelectedItem(), index);
+
+            // Convert continent from dropdown menu to Continent class
+            Continent continentObject = AdventusApp.convertContinentNum(cityContinent2.getSelectedIndex() + 1);
+
+            // Convert user's input to a city object, and add it to DestinationList
+            City cityObject = new City(cityName.getText(), rating, continentObject);
+            destinationList.addCity(cityObject);
 
             //Reset the text field.
             cityName.requestFocusInWindow();
@@ -239,7 +249,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
 
 
     // MODIFIES: destinationlist.txt
-    // EFFECTS: Writes the content of the JList into a TXT file
+    // EFFECTS: Writes the content of the JList into a .jSON file
     class SaveListener implements ActionListener {
         private JButton button;
 
@@ -249,14 +259,12 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
 
         public void actionPerformed(ActionEvent e) {
             try {
-                BufferedWriter bw = new BufferedWriter(new FileWriter("destinationlist.txt"));
-                for (int i = 0; i < list.getModel().getSize(); i++) {
-                    bw.write((String) list.getModel().getElementAt(i));
-                    bw.newLine();
-                }
-                bw.close();
-            } catch (IOException exception) {
-                System.out.println("\nIO error");
+                jsonWriter.open();
+                jsonWriter.write(destinationList);
+                jsonWriter.close();
+                System.out.println("Saved " + destinationList.getName() + " to " + JSON_STORE);
+            } catch (FileNotFoundException exception) {
+                System.out.println("Unable to write to file: " + JSON_STORE);
             }
         }
     }
@@ -271,49 +279,16 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
 
         // Code referenced from java2s.com tutorial for loading TXT file into a JList
         public void actionPerformed(ActionEvent e) {
-            File sourceFile = new File("./destinationlist.txt");
-            FileReader fr = null;
-            fr = getFileReader(sourceFile);
-            BufferedReader br = new BufferedReader(fr);
-            Vector<String> lines = new Vector<String>();
-            String line;
-            int index = 0;
-            listModel.removeAllElements();
-            addToJList(br, lines, index);
-            JOptionPane.showMessageDialog(null, new JScrollPane(new JList(lines)));
             try {
-                fr.close();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                destinationList = jsonReader.read();
+                System.out.println("Loaded " + destinationList.getName() + " from " + JSON_STORE);
+            } catch (IOException exception) {
+                System.out.println("Unable to read from file: " + JSON_STORE);
             }
-        }
-
-        private void addToJList(BufferedReader br, Vector<String> lines, int index) {
-            String line;
-            while (true) {
-                try {
-                    if (!((line = br.readLine()) != null)) {
-                        break;
-                    }
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-                lines.add(line);
-                listModel.insertElementAt(line, index);
-                index++;
-            }
-        }
-
-        private FileReader getFileReader(File sourceFile) {
-            FileReader fr;
-            try {
-                fr = new FileReader(sourceFile);
-            } catch (FileNotFoundException ex) {
-                throw new RuntimeException(ex);
-            }
-            return fr;
         }
     }
+
+
 
 
     // EFFECTS: This method is required by ListSelectionListener.
