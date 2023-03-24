@@ -11,25 +11,35 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Vector;
 
+import model.city.City;
+import model.city.Continent;
+import model.destinationlist.DestinationList;
+import persistence.JsonReader;
+import persistence.JsonWriter;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
+import java.util.Scanner;
+
 // AdventusApp for tracking cities visited. UI Development based off of Java's ListDemo.java demo
 public class AdventusAppUI extends JPanel implements ListSelectionListener {
 
     private JList list;
     private DefaultListModel listModel;
-    private Boolean[] annotations = null;
 
     private static final String JSON_STORE = "./data/destinationlist.json";
     private static final String addCityString = "Add";
     private static final String removeCityString = "Remove";
     private static final String saveString = "Save";
     private static final String loadString = "Load";
-    private static final String highlightString = "Highlight";
     private JButton addCityButton;
     private JButton removeCityButton;
     private JButton saveButton;
     private JButton loadButton;
-    private JButton highlightButton;
     private JTextField cityName;
+    private JTextField cityRating = new JTextField(10);
+    private JTextField cityContinent = new JTextField(10);
     private JScrollPane listScrollPane;
 
     // Constructor sets up button panel and field form.
@@ -37,7 +47,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
         super(new BorderLayout());
 
         listModel = new DefaultListModel();
-        listModel.addElement("Vancouver");
+        listModel.addElement("Vancouver, 5, North America");
 
         //Create the list and put it in a scroll pane.
         JScrollPane listScrollPane = getjScrollPane();
@@ -79,8 +89,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
         cityName = new JTextField(10);
         cityName.addActionListener(addCityListener);
         cityName.getDocument().addDocumentListener(addCityListener);
-        String name = listModel.getElementAt(
-                list.getSelectedIndex()).toString();
+
     }
 
     // Helper method of the Add City listener
@@ -93,21 +102,27 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
         return addCityListener;
     }
 
-    // EFFECT: Adds the buttons onto the GUI
+    // EFFECT: Adds the Jbuttons and JTextfields onto the GUI
     private void addButtonsPanel(JScrollPane listScrollPane) {
         JPanel buttonPane = new JPanel();
-        buttonPane.setLayout(new BoxLayout(buttonPane,
-                BoxLayout.LINE_AXIS));
-        buttonPane.add(removeCityButton);
+        JLabel labelCityName = new JLabel("Enter city name: ");
+        JLabel labelCityRating = new JLabel("Enter city rating: ");
+        JLabel labelCityContinent = new JLabel("Enter city's continent: ");
+        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
         buttonPane.add(Box.createHorizontalStrut(5));
         buttonPane.add(new JSeparator(SwingConstants.VERTICAL));
         buttonPane.add(Box.createHorizontalStrut(5));
+        buttonPane.add(labelCityName);
         buttonPane.add(cityName);
+        buttonPane.add(labelCityRating);
+        buttonPane.add(cityRating);
+        buttonPane.add(labelCityContinent);
+        buttonPane.add(cityContinent);
         buttonPane.add(addCityButton);
+        buttonPane.add(removeCityButton);
         buttonPane.add(saveButton);
         buttonPane.add(loadButton);
         buttonPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
         add(listScrollPane, BorderLayout.CENTER);
         add(buttonPane, BorderLayout.PAGE_END);
     }
@@ -163,19 +178,19 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
                 index++;
             }
 
-            listModel.insertElementAt(cityName.getText(), index);
-            //If we just wanted to add to the end, we'd do this:
-            //listModel.addElement(employeeName.getText());
+            listModel.insertElementAt(cityName.getText() + ", " + cityRating.getText()
+                    + ", " + cityContinent.getText(), index);
 
             //Reset the text field.
             cityName.requestFocusInWindow();
             cityName.setText("");
+            cityRating.setText("");
+            cityContinent.setText("");
 
             //Select the new item and make it visible.
             list.setSelectedIndex(index);
             list.ensureIndexIsVisible(index);
         }
-
 
         //This method tests for string equality. You could certainly
         //get more sophisticated about the algorithm.  For example,
@@ -221,6 +236,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
             return false;
         }
     }
+
 
     // MODIFIES: destinationlist.txt
     // EFFECTS: Writes the content of the JList into a TXT file
