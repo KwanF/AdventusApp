@@ -234,7 +234,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
 
 
     // MODIFIES: destinationlist.json
-    // EFFECTS: Reads the content .jSON file, puts it into a JList, and displays it
+    // EFFECTS: Writes the content for the destination list into JList
     class SaveListener implements ActionListener {
         private JButton button;
 
@@ -262,7 +262,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
             this.button = button;
         }
 
-        // Code referenced from java2s.com tutorial for loading TXT file into a JList
+        // EFFECTS: Reads from the jSON file and displays it into JList
         public void actionPerformed(ActionEvent e) {
             try {
                 destinationList = jsonReader.read();
