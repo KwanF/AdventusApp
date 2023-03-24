@@ -8,8 +8,6 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
-import java.util.Vector;
 
 import model.city.City;
 import model.city.Continent;
@@ -19,8 +17,6 @@ import persistence.JsonWriter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
-import java.util.Scanner;
 
 // AdventusApp for tracking cities visited. UI Development based off of Java's ListDemo.java demo
 public class AdventusAppUI extends JPanel implements ListSelectionListener {
@@ -34,16 +30,14 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
     private static final String saveString = "Save";
     private static final String loadString = "Load";
     private static final String[] continents = { "AFRICA", "ANTARCTICA", "ASIA", "EUROPE", "OCEANIA",
-            "NORTH AMERICA", "SOUTH AMERICA" };
+            "NORTH_AMERICA", "SOUTH_AMERICA" };
     private JButton addCityButton;
     private JButton removeCityButton;
     private JButton saveButton;
     private JButton loadButton;
     private JTextField cityName;
     private JTextField cityRating = new JTextField(10);
-    private JTextField cityContinent = new JTextField(10);
-    private JComboBox cityContinent2 = new JComboBox<>(continents);
-    private JScrollPane listScrollPane;
+    private JComboBox cityContinent = new JComboBox<>(continents);
     private DestinationList destinationList;
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
@@ -57,7 +51,6 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
         destinationList = new DestinationList("Kwan's destination list");
 
         listModel = new DefaultListModel();
-        listModel.addElement("Vancouver, 5, North America");
 
         //Create the list and put it in a scroll pane.
         JScrollPane listScrollPane = getjScrollPane();
@@ -116,7 +109,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
     private void addButtonsPanel(JScrollPane listScrollPane) {
         JPanel buttonPane = new JPanel();
         JLabel labelCityName = new JLabel("Enter city name: ");
-        JLabel labelCityRating = new JLabel("Enter city rating: ");
+        JLabel labelCityRating = new JLabel("Enter city rating (1-5): ");
         JLabel labelCityContinent = new JLabel("Enter city's continent: ");
         buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
         buttonPane.add(Box.createHorizontalStrut(5));
@@ -127,7 +120,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
         buttonPane.add(labelCityRating);
         buttonPane.add(cityRating);
         buttonPane.add(labelCityContinent);
-        buttonPane.add(cityContinent2);
+        buttonPane.add(cityContinent);
         buttonPane.add(addCityButton);
         buttonPane.add(removeCityButton);
         buttonPane.add(saveButton);
@@ -182,10 +175,10 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
 
             // This is where the city name, rating and continent gets added to the JList
             listModel.insertElementAt(cityName.getText() + ", " + cityRating.getText()
-                    + ", " + cityContinent2.getSelectedItem(), index);
+                    + ", " + cityContinent.getSelectedItem(), index);
 
             // Convert continent from dropdown menu to Continent class
-            Continent continentObject = AdventusApp.convertContinentNum(cityContinent2.getSelectedIndex() + 1);
+            Continent continentObject = AdventusApp.convertContinentNum(cityContinent.getSelectedIndex() + 1);
 
             // Convert user's input to a city object, and add it to DestinationList
             City cityObject = new City(cityName.getText(), rating, continentObject);
@@ -195,18 +188,10 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
             cityName.requestFocusInWindow();
             cityName.setText("");
             cityRating.setText("");
-            cityContinent.setText("");
 
             //Select the new item and make it visible.
             list.setSelectedIndex(index);
             list.ensureIndexIsVisible(index);
-        }
-
-        //This method tests for string equality. You could certainly
-        //get more sophisticated about the algorithm.  For example,
-        //you might want to ignore white space and capitalization.
-        protected boolean alreadyInList(String name) {
-            return listModel.contains(name);
         }
 
         //Required by DocumentListener.
@@ -248,8 +233,8 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
     }
 
 
-    // MODIFIES: destinationlist.txt
-    // EFFECTS: Writes the content of the JList into a .jSON file
+    // MODIFIES: destinationlist.json
+    // EFFECTS: Reads the content .jSON file, puts it into a JList, and displays it
     class SaveListener implements ActionListener {
         private JButton button;
 
@@ -282,6 +267,10 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
             try {
                 destinationList = jsonReader.read();
                 System.out.println("Loaded " + destinationList.getName() + " from " + JSON_STORE);
+                int index = 0;
+                for (City c : destinationList.getAllCities()) {
+                    listModel.insertElementAt(c.getName() + ", " + c.getRating() + ", " + c.getContinent(), index);
+                }
             } catch (IOException exception) {
                 System.out.println("Unable to read from file: " + JSON_STORE);
             }
