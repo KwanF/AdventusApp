@@ -17,6 +17,8 @@ import persistence.JsonWriter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 // AdventusApp for tracking cities visited. UI Development based off of Java's ListDemo.java demo
 public class AdventusAppUI extends JPanel implements ListSelectionListener {
@@ -145,7 +147,12 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
                 if (index == listModel.getSize()) {
                     //removed item in last position
                     index--;
+
                 }
+
+                City cityObject = destinationList.getAllCities().get(index);
+                String cityToRemove = cityObject.getName();
+                destinationList.removeCity(cityToRemove);
 
                 list.setSelectedIndex(index);
                 list.ensureIndexIsVisible(index);
@@ -268,7 +275,9 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
                 destinationList = jsonReader.read();
                 System.out.println("Loaded " + destinationList.getName() + " from " + JSON_STORE);
                 int index = 0;
-                for (City c : destinationList.getAllCities()) {
+                List<City> savedList = destinationList.getAllCities();
+                Collections.reverse(savedList);
+                for (City c : savedList) {
                     listModel.insertElementAt(c.getName() + ", " + c.getRating() + ", " + c.getContinent(), index);
                 }
             } catch (IOException exception) {
