@@ -21,10 +21,10 @@ asks me about my experience at a certain location, I won't forget the name and t
 - Start the GUI application by running AdventusAppUI (Main is for the console application)
 - You can generate the first required action related to adding Xs to a Y (adding a city) by filling out the three 
   fields at the bottom, then clicking the "Add" button at the bottom of the panel to add the city
-- You can generate the second required action related to adding Xs to a Y (removing a city) by first selecting 
-  a city entry with your mouse, which highlights the city you want to remove, then clicking the "Remove" button at the 
-  bottom of the panel to remove a city
-- You can locate my visual component by running AdventusAppUI, as it is image is the splash screen that shows as a 
+- You can generate the second required action related to adding Xs to a Y (removing a city) by selecting 
+  a city entry with your mouse to the city you want to remove, then clicking the "Remove" button at the 
+  bottom of the panel to remove a city. Remember to save so that the .JSON file gets updated as well!
+- You can locate my visual component by running AdventusAppUI, as the image is a splash screen that shows as a 
   popup! The image is called "adventus-splash-screen.png" in the file explorer
 - You can save the state of my application by clicking the "Save" button at the bottom of the panel
 - You can reload the state of my application by clicking the "Load" button at the bottom of the panel

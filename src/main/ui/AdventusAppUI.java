@@ -45,6 +45,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
     private JsonReader jsonReader;
 
     // Constructor sets up button panel and field form.
+    // EFFECTS: constructs and runs the AdventusUI (GUI version) application
     public AdventusAppUI() {
         super(new BorderLayout());
 
@@ -107,6 +108,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
         return addCityListener;
     }
 
+    // Sets up the button panel
     // EFFECT: Adds the Jbuttons, JTextfields and JComboBox onto the GUI
     private void addButtonsPanel(JScrollPane listScrollPane) {
         JPanel buttonPane = new JPanel();
@@ -132,7 +134,8 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
         add(buttonPane, BorderLayout.PAGE_END);
     }
 
-    // EFFECT: Helper method for removing a city
+    // MODIFIES: listModel, destinationList
+    // EFFECT: Helper method for removing a city in destinationList and the JList
     class RemoveCityListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             int index = list.getSelectedIndex();
@@ -161,6 +164,8 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
     }
 
     // This listener is shared by the text field and the add city button.
+    // MODIFIES: listModel, destinationList
+    // EFFECT: Adds a City entry to JList, and updates the destinationList backend.
     class AddCityListener implements ActionListener, DocumentListener {
         private boolean alreadyEnabled = false;
         private JButton button;
@@ -239,8 +244,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
         }
     }
 
-
-    // MODIFIES: destinationlist.json
+    // MODIFIES: THE .JSON file at JSON_STORE
     // EFFECTS: Writes the content for the destination list into JList
     class SaveListener implements ActionListener {
         private JButton button;
@@ -261,6 +265,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
         }
     }
 
+    // MODIFIES: THE .JSON file at JSON_STORE
     // EFFECTS: Reads the TXT file and loads it into a JList
     class LoadListener implements ActionListener {
         private JButton button;
@@ -286,9 +291,6 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
         }
     }
 
-
-
-
     // EFFECTS: This method is required by ListSelectionListener.
     public void valueChanged(ListSelectionEvent e) {
         if (e.getValueIsAdjusting() == false) {
@@ -304,6 +306,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
         }
     }
 
+    // REQUIRES: An image to be displayed at the splash screen
     // EFFECTS: Creates and shows the GUI
     private static void createAndShowGUI() {
         // Create and set up the window.
