@@ -9,19 +9,24 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import model.Event;
+import model.EventLog;
+import model.LogException;
 import model.city.City;
 import model.city.Continent;
 import model.destinationlist.DestinationList;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
 // AdventusApp for tracking cities visited. UI Development based off of Java's ListDemo.java demo
-public class AdventusAppUI extends JPanel implements ListSelectionListener {
+public class AdventusAppUI extends JPanel implements ListSelectionListener, WindowListener {
 
     private JList list;
     private DefaultListModel listModel;
@@ -153,10 +158,17 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
 
                 }
 
+                // Removes the city in the model
                 City cityObject = destinationList.getAllCities().get(index);
                 String cityToRemove = cityObject.getName();
                 destinationList.removeCity(cityToRemove);
 
+                // Add an entry to the EventLog
+                EventLog.getInstance().logEvent(new Event("REMOVED: City: " + cityObject.getName() + ", Rating: "
+                        + cityObject.getRating() + " stars, Continent: "
+                        + cityObject.getContinent()));
+
+                // Highlights a new city in the UI
                 list.setSelectedIndex(index);
                 list.ensureIndexIsVisible(index);
             }
@@ -195,6 +207,10 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
             // Convert user's input to a city object, and add it to DestinationList
             City cityObject = new City(cityName.getText(), rating, continentObject);
             destinationList.addCity(cityObject);
+
+            // Add an entry to the EventLog
+            EventLog.getInstance().logEvent(new Event("ADDED: City: " + cityName.getText() + ", Rating: " + rating
+                    + " stars, Continent: " + cityContinent.getSelectedItem()));
 
             //Reset the text field.
             cityName.requestFocusInWindow();
@@ -311,6 +327,7 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
     private static void createAndShowGUI() {
         // Create and set up the window.
         JFrame frame = new JFrame("Adventus App");
+        frame.addWindowListener(new AdventusAppUI());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Create and set up the content pane.
@@ -325,6 +342,45 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener {
         JOptionPane.showMessageDialog(null, "", "Welcome to", JOptionPane.INFORMATION_MESSAGE, icon);
     }
 
+    // Required by WindowListener
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    // Required by WindowListener
+    @Override
+    public void windowClosing(WindowEvent e) {
+        for (Event event : EventLog.getInstance()) {
+            System.out.println(event.getDescription());
+        }
+    }
+
+    // Required by WindowListener
+    @Override
+    public void windowClosed(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
+    }
 
     // EFFECTS: Starts the application
     public static void main(String[] args) {
