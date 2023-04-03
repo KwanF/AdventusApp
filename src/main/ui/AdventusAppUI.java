@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 
 import model.Event;
 import model.EventLog;
-import model.LogException;
 import model.city.City;
 import model.city.Continent;
 import model.destinationlist.DestinationList;
@@ -362,21 +361,25 @@ public class AdventusAppUI extends JPanel implements ListSelectionListener, Wind
 
     }
 
+    // Required by WindowListener
     @Override
     public void windowIconified(WindowEvent e) {
 
     }
 
+    // Required by WindowListener
     @Override
     public void windowDeiconified(WindowEvent e) {
 
     }
 
+    // Required by WindowListener
     @Override
     public void windowActivated(WindowEvent e) {
 
     }
 
+    // Required by WindowListener
     @Override
     public void windowDeactivated(WindowEvent e) {
 
