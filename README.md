@@ -28,3 +28,14 @@ asks me about my experience at a certain location, I won't forget the name and t
   popup! The image is called "adventus-splash-screen.png" in the file explorer
 - You can save the state of my application by clicking the "Save" button at the bottom of the panel
 - You can reload the state of my application by clicking the "Load" button at the bottom of the panel
+
+# Phase 4: Task 3
+Below are some refactoring that I could do:
+- Use the Observer pattern to implement the GUI and the model, where the GUI is the subject, and the model is the 
+  observer. Whenever the GUI changes state based on an ActionListener, the model is automatically notified and updated.
+- Apply the composite pattern, where DestinationList is the composite, City is the leaf, and a new abstract class or 
+  interface will need to be created to be the component.
+- Apply the composite pattern to the GUI, where the individual Jbuttons and text forms/fields are the leaf, the 
+  JFrame is the composite, and a new abstract class or interface will need to be created to be the component.
+- Increase the cohesion for the AdeventusAppUI class, as methods like AddCityListener and RemoveCityListener should 
+   be a separate class
