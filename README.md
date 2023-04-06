@@ -37,5 +37,7 @@ Below are some refactoring that I could do:
   interface will need to be created to be the component.
 - Apply the composite pattern to the GUI, where the individual Jbuttons and text forms/fields are the leaf, the 
   JFrame is the composite, and a new abstract class or interface will need to be created to be the component.
+- Implement the Singleton pattern for DestinationList, to ensure that there can only be one Destinationlist at all 
+  times. 
 - Increase the cohesion for the AdeventusAppUI class, as methods like AddCityListener and RemoveCityListener should 
    be a separate class
