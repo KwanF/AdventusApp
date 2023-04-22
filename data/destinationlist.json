@@ -1,0 +1,20 @@
+{
+    "cities": [
+        {
+            "continent": "AFRICA",
+            "name": "vancouver",
+            "rating": 1
+        },
+        {
+            "continent": "NORTH_AMERICA",
+            "name": "burnaby",
+            "rating": 2
+        },
+        {
+            "continent": "EUROPE",
+            "name": "LONDON",
+            "rating": 3
+        }
+    ],
+    "name": "Kwan's destination list"
+}
